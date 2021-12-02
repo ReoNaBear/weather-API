@@ -1,0 +1,523 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url(./img/天氣預報\ 封面.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+}
+
+
+
+#start {
+  position: absolute;
+  text-align: center;
+  right: 23%;
+}
+
+h1 {
+  font-size: 50px;
+  padding-bottom: 20px;
+}
+
+#start div {
+  font-size: 25px;
+  line-height: 3;
+  margin: 20px;
+  background-color: #c29fb4;
+  border-radius: 20px;
+}
+
+#start div:hover {
+  color: aliceblue;
+}
+
+.return-btn:hover {
+  color: #666666;
+}
+
+.return-btn {
+  position: absolute;
+  left: 5%;
+  top: 5%;
+  background-color: bisque;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 15px;
+}
+
+.time-btn {
+  position: absolute;
+  left: 5%;
+  background-color: rgb(85, 60, 30);
+  color: white;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 15px;
+}
+
+.afternoon {
+  top: 20%;
+}
+
+.day {
+  top: 25%;
+}
+
+.night {
+  top: 30%;
+}
+
+.container {
+  display: flex;
+  width: 80vw;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0px;
+  flex-wrap: wrap;
+  font-size: 20px;
+}
+
+
+
+.card {
+  display: none;
+  position: relative;
+  width: 320px;
+  height: 400px;
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 30px;
+  transition: .5s;
+  transform-style: preserve-3d;
+  transition: all 0.8s ease;
+}
+
+
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #e6d5a7, #e688a9);
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #e6d5a7, #e688a9);
+  filter: blur(20px);
+}
+
+.card.southern:after,
+.card.southern:before {
+  background: linear-gradient(315deg, #a9d2e6, #a562e4);
+}
+
+.card.central:after,
+.card.central:before {
+  background: linear-gradient(315deg, #a0ee7f, #35a7c0);
+}
+
+
+.card.other:after,
+.card.other:before {
+  background: linear-gradient(315deg, #b93c3c, #94672c);
+}
+
+
+.card:hover {
+  transform: rotateY(180deg);
+}
+
+.theFront {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  overflow: hidden;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.theBack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  overflow: hidden;
+  transform: rotateY(180deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.card span {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  z-index: 1;
+}
+
+.card span::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.content {
+  z-index: 2;
+  position: relative;
+  padding: 20px 40px;
+  text-align: center;
+}
+
+.content h2 {
+  font-size: 2em;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.content div {
+  font-size: 1.1em;
+  color: #fff;
+  line-height: 1.4em;
+  margin-bottom: 10px;
+}
+
+.container .card .content a {
+  display: inline-block;
+  text-decoration: none;
+  color: #000;
+  background-color: #fff;
+  padding: 7px;
+  font-weight: 600;
+  border-radius: 5px;
+}
+
+
+.icon {
+  position: relative;
+  display: inline-block;
+  width: 160px;
+  height: 160px;
+  font-size: 16px;
+}
+
+.cloud {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: 75px;
+  height: 72px;
+  margin: -36px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow:
+    -44px 13px 0 -6px,
+    38px 18px 0 -11px,
+    0 -3px 0 7px;
+  animation: cloud1 4s linear infinite;
+}
+
+.cloud:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -8px;
+  display: block;
+  width: 73px;
+  height: 16px;
+  background: currentColor;
+  box-shadow: 7px 6px 0 1px;
+}
+
+.cloud:nth-child(2) {
+  z-index: 0;
+  box-shadow:
+    -44px 13px 0 -6px,
+    38px 18px 0 -11px,
+    0 -3px 0 7px;
+  opacity: 0.5;
+  transform: scale(0.5) translate(110px, -70px);
+  animation: cloud2 4s linear infinite;
+}
+
+.cloud:nth-child(2):after {
+  background: #fff;
+}
+
+.sun {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  margin: -1.25em;
+  background: currentColor;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0.375em #eee3a4;
+  animation: spin 12s infinite linear;
+}
+
+.rays {
+  position: absolute;
+  top: -2em;
+  left: 50%;
+  display: block;
+  width: 0.375em;
+  height: 1.125em;
+  margin-left: -0.1875em;
+  background: #eee3a4;
+  border-radius: 0.25em;
+  box-shadow: 0 5.375em #eee3a4;
+}
+
+.rays:before,
+.rays:after {
+  content: '';
+  position: absolute;
+  top: 0em;
+  left: 0em;
+  display: block;
+  width: 0.375em;
+  height: 1.125em;
+  transform: rotate(60deg);
+  transform-origin: 50% 3.25em;
+  background: #eee3a4;
+  border-radius: 0.25em;
+  box-shadow: 0 5.375em #eee3a4;
+}
+
+.rays:before {
+  transform: rotate(120deg);
+}
+
+.cloud+.sun {
+  margin: -2em 1em;
+}
+
+.rain,
+.lightning {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 3.75em;
+  height: 3.75em;
+  margin: 0.375em 0 0 -2em;
+  background: none;
+  animation: cloud1;
+}
+
+.rain:after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 1.125em;
+  height: 1.125em;
+  margin: -1em 0 0 -0.25em;
+  background: #0cf;
+  border-radius: 100% 0 60% 50% / 60% 0 100% 50%;
+  box-shadow:
+    0.625em 0.875em 0 -0.125em rgba(255, 255, 255, 0.2),
+    -0.875em 1.125em 0 -0.125em rgba(255, 255, 255, 0.2),
+    -1.375em -0.125em 0 rgba(255, 255, 255, 0.2);
+  transform: rotate(-28deg);
+  animation: rain 3s linear infinite;
+}
+
+.bolt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -0.25em 0 0 -0.125em;
+  opacity: 0.3;
+  animation: lightning 2s linear infinite;
+}
+
+.bolt:nth-child(2) {
+  width: 0.5em;
+  height: 0.25em;
+  margin: -1.75em 0 0 -1.875em;
+  transform: translate(2.5em, 2.25em);
+  opacity: 0.2;
+  animation: lightning 1.5s linear infinite;
+}
+
+.bolt:before,
+.bolt:after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  margin: -1.625em 0 0 -1.0125em;
+  border-top: 1.25em solid transparent;
+  border-right: 0.75em solid;
+  border-bottom: 0.75em solid;
+  border-left: 0.5em solid transparent;
+  transform: skewX(-10deg);
+}
+
+.bolt:after {
+  margin: -0.25em 0 0 -0.25em;
+  border-top: 0.75em solid;
+  border-right: 0.5em solid transparent;
+  border-bottom: 1.25em solid transparent;
+  border-left: 0.75em solid;
+  transform: skewX(-10deg);
+}
+
+.bolt:nth-child(2):before {
+  margin: -0.75em 0 0 -0.5em;
+  border-top: 0.625em solid transparent;
+  border-right: 0.375em solid;
+  border-bottom: 0.375em solid;
+  border-left: 0.25em solid transparent;
+}
+
+.bolt:nth-child(2):after {
+  margin: -0.125em 0 0 -0.125em;
+  border-top: 0.375em solid;
+  border-right: 0.25em solid transparent;
+  border-bottom: 0.625em solid transparent;
+  border-left: 0.375em solid;
+}
+
+.theBack .icon {
+  position: absolute;
+  font-size: 20px;
+  z-index: 0;
+}
+
+.inactive {
+  display: none;
+}
+
+.active {
+  display: flex;
+}
+
+
+/* Animations */
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rain {
+  0% {
+    background: #0cf;
+    box-shadow:
+      0.625em 0.875em 0 -0.125em rgba(255, 255, 255, 0.2),
+      -0.875em 1.125em 0 -0.125em rgba(255, 255, 255, 0.2),
+      -1.375em -0.125em 0 #0cf;
+  }
+
+  25% {
+    box-shadow:
+      0.625em 0.875em 0 -0.125em rgba(255, 255, 255, 0.2),
+      -0.875em 1.125em 0 -0.125em #0cf,
+      -1.375em -0.125em 0 rgba(255, 255, 255, 0.2);
+  }
+
+  50% {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow:
+      0.625em 0.875em 0 -0.125em #0cf,
+      -0.875em 1.125em 0 -0.125em rgba(255, 255, 255, 0.2),
+      -1.375em -0.125em 0 rgba(255, 255, 255, 0.2);
+  }
+
+  100% {
+    box-shadow:
+      0.625em 0.875em 0 -0.125em rgba(255, 255, 255, 0.2),
+      -0.875em 1.125em 0 -0.125em rgba(255, 255, 255, 0.2),
+      -1.375em -0.125em 0 #0cf;
+  }
+}
+
+@keyframes lightning {
+  45% {
+    color: #666;
+    background: #666;
+    opacity: 0.2;
+  }
+
+  50% {
+    color: rgb(247, 230, 5);
+    background: rgb(247, 230, 5);
+    opacity: 1;
+  }
+
+  55% {
+    color: #333;
+    background: #333;
+    opacity: 0.2;
+  }
+}
+
+@keyframes cloud1 {
+  0% {
+    transform: translate(-20%)
+  }
+
+  100% {
+    transform: translate(20%);
+  }
+}
+
+@keyframes cloud2 {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.5) translate(-200%, -70px);
+  }
+}
