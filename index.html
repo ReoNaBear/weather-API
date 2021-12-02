@@ -7,34 +7,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>天氣卡片</title>
   <link rel="stylesheet" href="./weather.css">
-
-  <style>
-
-  </style>
 </head>
 
 <body>
-  <div id="start">
-    <h1>本日各地區天氣預報</h1>
-    <div class="north-part">北部地區</div>
-    <div class="central-part">中部地區</div>
-    <div class="south-part">南部地區</div>
-    <div class="other">東部及離島地區</div>
-  </div>
+  <main>
+    <div id="start">
+      <h1>本日各地區天氣預報</h1>
+      <div class="north-part">北部地區</div>
+      <div class="central-part">中部地區</div>
+      <div class="south-part">南部地區</div>
+      <div class="other">東部及離島地區</div>
+    </div>
 
 
-  <div id="container" class="container inactive"></div>
+    <div id="container" class="container inactive"></div>
 
-  <div class="return-btn inactive">回到首頁</div>
-
-
-  <div id="timing">
-    <div class="time-btn inactive afternoon">下午 12~18</div>
-    <div class="time-btn inactive day">白天 06~18</div>
-    <div class="time-btn inactive night">晚上 18~06</div>
-  </div>
+    <div class="return-btn inactive">回到首頁</div>
 
 
+    <div id="timing">
+      <div class="time-btn inactive afternoon">下午 12~18</div>
+      <div class="time-btn inactive day">白天 06~18</div>
+      <div class="time-btn inactive night">晚上 18~06</div>
+    </div>
+
+  </main>
 
   <script>
     const url = 'https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-7D6B9A39-E4B0-4772-BFEB-115E7CFA8172'
@@ -67,8 +64,6 @@
 
 
     start.addEventListener('click', function () {
-      console.log(event.target);
-      let body = document.querySelector('body')
       let northern = document.querySelectorAll('.northern')
       let central = document.querySelectorAll('.central')
       let southern = document.querySelectorAll('.southern')
@@ -76,7 +71,6 @@
       if (event.target.matches('.north-part')) {
         active(northern)
         changePage()
-        body.style.backgroundImage = `url(./img/northern.png)`
       } else if (event.target.matches('.central-part')) {
         active(central)
         changePage()

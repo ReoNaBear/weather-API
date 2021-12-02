@@ -4,14 +4,15 @@
   box-sizing: border-box;
 }
 
-body {
+main {
   display: flex;
   justify-content: center;
   align-items: center;
   background-image: url(./img/天氣預報\ 封面.png);
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
+  background-position: inherit;
+  background-attachment: fixed;
   min-height: 100vh;
 }
 
@@ -98,9 +99,8 @@ h1 {
   justify-content: center;
   align-items: center;
   margin: 20px 30px;
-  transition: .5s;
   transform-style: preserve-3d;
-  transition: all 0.8s ease;
+  transition: all 1.5s ease;
 }
 
 
@@ -145,6 +145,7 @@ h1 {
 
 .card:hover {
   transform: rotateY(180deg);
+
 }
 
 .theFront {
