@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>天氣卡片</title>
+  <link rel="stylesheet" href="./weather.css">
+
+  <style>
+
+  </style>
+</head>
+
+<body>
+  <div id="start">
+    <h1>本日各地區天氣預報</h1>
+    <div class="north-part">北部地區</div>
+    <div class="central-part">中部地區</div>
+    <div class="south-part">南部地區</div>
+    <div class="other">東部及離島地區</div>
+  </div>
+
+
+  <div id="container" class="container inactive"></div>
+
+  <div class="return-btn inactive">回到首頁</div>
+
+
+  <div id="timing">
+    <div class="time-btn inactive afternoon">下午 12~18</div>
+    <div class="time-btn inactive day">白天 06~18</div>
+    <div class="time-btn inactive night">晚上 18~06</div>
+  </div>
+
+
+
+  <script>
+    const url = 'https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWB-7D6B9A39-E4B0-4772-BFEB-115E7CFA8172'
+
+    let container = document.querySelector('#container')
+    let start = document.querySelector('#start')
+    let timing = document.querySelector('#timing')
+    let timeBtn = document.querySelectorAll('.time-btn')
+    let returnBtn = document.querySelector('.return-btn')
+
+    initPage()
+
+    returnBtn.addEventListener('click', function () {
+      location.reload()
+    })
+
+    timing.addEventListener('click', function () {
+      let activeEle = document.querySelector('.active')
+      if (event.target.matches('.afternoon')) {
+        initPage(0, activeEle)
+      } else if (event.target.matches('.night')) {
+        initPage(1, activeEle)
+      } else if (event.target.matches('.day')) {
+        initPage(2, activeEle)
+      }
+    })
+
+
+
+
+
+    start.addEventListener('click', function () {
+      console.log(event.target);
+      let body = document.querySelector('body')
+      let northern = document.querySelectorAll('.northern')
+      let central = document.querySelectorAll('.central')
+      let southern = document.querySelectorAll('.southern')
+      let other = document.querySelectorAll('.other')
+      if (event.target.matches('.north-part')) {
+        active(northern)
+        changePage()
+        body.style.backgroundImage = `url(./img/northern.png)`
+      } else if (event.target.matches('.central-part')) {
+        active(central)
+        changePage()
+      }
+      else if (event.target.matches('.south-part')) {
+        active(southern)
+        changePage()
+      } else if (event.target.matches('.other')) {
+        active(other)
+        changePage()
+      }
+    })
+
+    function initPage(time, activeEle) {
+      let timing = time ? time : 0
+      console.log(time);
+      fetch(url)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          renderList(data.records.location, timing, activeEle)
+        })
+    }
+
+
+    function active(array) {
+      array.forEach(element => {
+        element.classList.add('active')
+      });
+    }
+
+    function changePage() {
+      returnBtn.classList.remove('inactive')
+      container.classList.remove('inactive')
+      start.classList.add('inactive')
+      timeBtn.forEach(element => {
+        element.classList.remove('inactive')
+      });
+    }
+
+
+    function renderList(data, timing, activeEle) {
+      // console.log(data)
+      let rawHTML = ''
+      let area = ''
+      const counties = ['臺北市', '新北市', '基隆市', '宜蘭縣', '桃園市', '新竹縣', '新竹市', '苗栗縣', '臺中市', '彰化縣', '南投縣', '雲林縣', '嘉義縣', '嘉義市', '臺南市', '高雄市', '屏東縣', '花蓮縣', '臺東縣', '連江縣', '金門縣', '澎湖縣'];
+
+      let weatherData = {};
+      data.forEach((location) => {
+        weatherData[location['locationName']] = {};
+        let weatherElements = location['weatherElement'];
+        weatherElements.forEach((weatherElement) => {
+          weatherData[location['locationName']][weatherElement['elementName']] = weatherElement['time'][timing]['parameter']['parameterName'];
+        });
+      })
+      console.log(weatherData);
+
+      counties.forEach((county, index) => {
+        if (index <= 6) {
+          area = 'northern'
+        } else if (index <= 11) {
+          area = 'central'
+        } else if (index <= 16) {
+          area = 'southern'
+        } else {
+          area = 'other'
+        }
+        let wx = weatherData[county]['Wx']
+        let wxHTML = weather(wx)
+        rawHTML += `
+        <div class="card ${area}">
+          <div class="theFront">
+            <span></span>
+            <div class="content">
+              ${wxHTML}
+              <h2 class="city">${county}</h2>
+            </div>
+          </div>
+          <div class="theBack">
+            <span></span>
+            ${wxHTML}
+            <div class="content">
+              
+              <h2 class="city">${county}</h2>
+              <div class="wx">${weatherData[county]['Wx']}</div>
+              <div class="maxT">最高溫度: ${weatherData[county]['MaxT']}ﾟC</div>
+              <div class="minT">最低溫度: ${weatherData[county]['MinT']}ﾟC</div>
+              <div class="PoP">降雨機率: ${weatherData[county]['PoP']} %</div>
+              <div class="CI">${weatherData[county]['CI']}</div>
+            </div>
+          </div>
+        </div>
+        `
+      });
+      ///********************原本的版本********************\\\
+
+      // data.forEach((element, index, a) => {
+      //   console.log(index);
+      //   console.log(element);
+      //   console.log(Southern.find(e => e == index));
+      //   if (Southern.find(e => e == index) || Southern.find(e => e == index) === 0) {
+      //     area = 'southern'
+      //   } else if (Central.find(e => e == index)) {
+      //     area = 'central'
+      //   } else if (Northern.find(e => e == index)) {
+      //     area = 'northern'
+      //   } else {
+      //     area = 'other'
+      //   }
+
+      //   let wxs = element.weatherElement[0].time
+      //   let PoPs = element.weatherElement[1].time
+      //   let minTs = element.weatherElement[2].time
+      //   let CIs = element.weatherElement[3].time
+      //   let maxTs = element.weatherElement[4].time
+
+
+      //   let wx = wxs[timing].parameter.parameterName
+      //   let PoP = PoPs[timing].parameter.parameterName
+      //   let minT = minTs[timing].parameter.parameterName
+      //   let CI = CIs[timing].parameter.parameterName
+      //   let maxT = maxTs[timing].parameter.parameterName
+
+      //   let wxHTML = weather(wx)
+
+      //   rawHTML += `
+      //   <div class="card ${area}">
+      //     <div class="theFront">
+      //       <span></span>
+      //       <div class="content">
+      //         ${wxHTML}
+      //         <h2 class="city">${element.locationName}</h2>
+      //       </div>
+      //     </div>
+      //     <div class="theBack">
+      //       <span></span>
+      //       ${wxHTML}
+      //       <div class="content">
+
+      //         <h2 class="city">${element.locationName}</h2>
+      //         <div class="wx">${wx}</div>
+      //         <div class="maxT">最高溫度: ${maxT}ﾟC</div>
+      //         <div class="minT">最低溫度: ${minT}ﾟC</div>
+      //         <div class="PoP">降雨機率: ${PoP} %</div>
+      //         <div class="CI">${CI}</div>
+      //       </div>
+      //     </div>
+      //   </div>
+      //   `
+      // });
+      // console.log(rawHTML);
+      container.innerHTML = rawHTML
+      if (activeEle) {
+        timeToCard(activeEle)
+      }
+    }
+
+    function weather(wx) {
+      let weatherHTML = ''
+      if (wx.includes('晴') || wx.includes('晨')) {
+        console.log('hi');
+        if (wx.includes('雷')) {
+          console.log('晴雷');
+          weatherHTML += `
+          <div class="icon thunder-storm">
+            <div class="cloud"></div>
+            <div class="sun">
+              <div class="rays"></div>
+            </div>
+            <div class="lightning">
+              <div class="bolt"></div>
+              <div class="bolt"></div>
+            </div>
+          </div>
+          `
+        } else if (wx.includes('雲') || wx.includes('霧')) {
+          console.log('晴雲');
+          weatherHTML += `
+            <div class="icon sun-cloud">
+              <div class="cloud"></div>
+              <div class="sun">
+                <div class="rays"></div>
+              </div>
+            </div>
+          `
+        } else if (wx.includes('雨')) {
+          console.log('晴雨');
+          weatherHTML += `
+            <div class="icon sun-shower">
+              <div class="cloud"></div>
+              <div class="sun">
+                <div class="rays"></div>
+              </div>
+              <div class="rain"></div>
+            </div>
+          `
+        } else {
+          console.log('晴');
+          weatherHTML += `
+            <div class="icon sunny">
+              <div class="sun">
+                <div class="rays"></div>
+              </div>
+            </div>
+          `
+        }
+      } else if (wx.includes('雷')) {
+        console.log('雷雨');
+        weatherHTML += `
+          <div class="icon thunder-storm">
+            <div class="cloud"></div>
+            <div class="lightning">
+              <div class="bolt"></div>
+              <div class="bolt"></div>
+            </div>
+          </div>
+          `
+      } else if (wx.includes('雨')) {
+        console.log('雨');
+        weatherHTML += `
+          <div class="icon rainy">
+            <div class="cloud"></div>
+            <div class="rain"></div>
+          </div>
+          `
+      } else {
+        console.log('雲');
+        weatherHTML += `
+          <div class="icon cloudy">
+            <div class="cloud"></div>
+            <div class="cloud"></div>
+          </div>
+          `
+      }
+      return weatherHTML
+    }
+
+    function timeToCard(activeEle) {
+      let northern = document.querySelectorAll('.northern')
+      let central = document.querySelectorAll('.central')
+      let southern = document.querySelectorAll('.southern')
+      let other = document.querySelectorAll('.other')
+      if (activeEle.matches('.northern')) {
+        active(northern)
+      } else if (activeEle.matches('.southern')) {
+        active(southern)
+      } else if (activeEle.matches('.central')) {
+        active(central)
+      } else {
+        active(other)
+      }
+    }
+
+
+
+
+
+  </script>
+</body>
+
+</html>
